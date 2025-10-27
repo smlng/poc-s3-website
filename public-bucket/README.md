@@ -20,21 +20,21 @@ docker compose.
 
 Create minio config
 ```shell
-docker run --rm -it --network container:minio -v ./mc_data:/root/.mc minio/mc alias set local http://localhost:9080 admin minio-admin-password
-docker run --rm -it --network container:minio -v ./mc_data:/root/.mc minio/mc ls local
+docker run --rm -it --network host -v ./mc_data:/root/.mc minio/mc alias set local http://localhost:9081 admin minio-admin-password
+docker run --rm -it --network host -v ./mc_data:/root/.mc minio/mc ls local
 ```
 
 Create bucket `website`
 ```shell
-docker run --rm -it --network container:minio -v ./mc_data:/root/.mc minio/mc mb local/website
+docker run --rm -it --network host -v ./mc_data:/root/.mc minio/mc mb local/website
 ```
 
 Make bucket public
 ```shell
-docker run --rm -it --network container:minio -v ./mc_data:/root/.mc minio/mc anonymous set public local/website
+docker run --rm -it --network host -v ./mc_data:/root/.mc minio/mc anonymous set public local/website
 ```
 
 Upload index.html
 ```shell
-docker run --rm -it --network container:minio -v ./mc_data:/root/.mc -v "./index.html:/tmp/index.html" minio/mc put /tmp/index.html local/website
+docker run --rm -it --network host -v ./mc_data:/root/.mc -v "./index.html:/tmp/index.html" minio/mc put /tmp/index.html local/website
 ```
