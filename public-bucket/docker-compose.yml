@@ -1,5 +1,4 @@
-version: "3.9"
-
+---
 services:
   minio:
     image: minio/minio:latest
@@ -27,7 +26,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx_cache:/var/cache/nginx
-  
+
   minio-init-mc:
     image: minio/mc
     depends_on:
@@ -66,4 +65,3 @@ services:
       anonymous set public local/website
     volumes:
       - ./mc_data:/root/.mc
-    
