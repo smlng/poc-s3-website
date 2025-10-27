@@ -8,7 +8,7 @@ to change the credentials for Minio set in `.env`.
 docker compose up -d
 ```
 
-Open a browser and verify that [Minio](http://localhost:9000) (credentials are
+Open a browser and verify that [Minio](http://localhost:9080) (credentials are
 set in the file `.env`) and [Nginx](http://localhost:8080) are ready. 
 The latter should show the sample website given by the `index.html`.
 
