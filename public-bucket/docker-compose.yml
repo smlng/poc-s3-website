@@ -3,7 +3,6 @@ version: "3.9"
 services:
   minio:
     image: minio/minio:latest
-    container_name: minio
     env_file:
       - .env
     restart: unless-stopped
@@ -20,7 +19,6 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: nginx
     restart: unless-stopped
     depends_on:
       - minio
