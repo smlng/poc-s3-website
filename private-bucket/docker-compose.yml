@@ -50,7 +50,7 @@ services:
       mb local/website
     volumes:
       - ./mc_data:/root/.mc
-  
+
   minio-init-user:
     image: minio/mc
     depends_on:
