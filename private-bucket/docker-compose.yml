@@ -27,9 +27,6 @@ services:
       - "8081:80"
     volumes:
       - ./nginx_cache:/var/cache/nginx
-      - ./default.conf:/etc/nginx/conf.d/default.conf
-      - ./default.main:/etc/nginx/conf.d/default.main
-      - ./s3-proxy.lua:/etc/nginx/lua/s3-proxy.lua
 
   minio-init-mc:
     image: minio/mc
