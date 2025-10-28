@@ -1,0 +1,93 @@
+---
+services:
+  minio:
+    image: minio/minio:latest
+    env_file:
+      - .env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9001/login"]
+      interval: 10s
+      retries: 5
+    command: server /data --console-address ":9001"
+    ports:
+      - "9090:9000"
+      - "9091:9001"
+    volumes:
+      - ./minio_data:/data
+
+  openresty:
+    build: .
+    env_file:
+      - .env
+    restart: unless-stopped
+    depends_on:
+      - minio
+    ports:
+      - "8090:80"
+    volumes:
+      - ./nginx_cache:/var/cache/nginx
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ./default.main:/etc/nginx/conf.d/default.main
+      - ./s3-proxy.lua:/etc/nginx/lua/s3-proxy.lua
+
+  minio-init-mc:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: [""]
+    command: |
+      mc alias set local http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD
+    volumes:
+      - ./mc_data:/root/.mc
+
+  minio-init-bucket:
+    image: minio/mc
+    depends_on:
+      - minio-init-mc
+    command: |
+      mb local/website
+    volumes:
+      - ./mc_data:/root/.mc
+  
+  minio-init-user:
+    image: minio/mc
+    depends_on:
+      - minio-init-mc
+    entrypoint: [""]
+    command: |
+      mc admin user add local $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+    volumes:
+      - ./mc_data:/root/.mc
+
+  minio-init-policy:
+    image: minio/mc
+    depends_on:
+      - minio-init-mc
+    command: |
+      admin policy create local website-ro /tmp/website-ro.json
+    volumes:
+      - ./mc_data:/root/.mc
+      - ./minio-website-ro.json:/tmp/website-ro.json
+
+  minio-set-policy:
+    image: minio/mc
+    depends_on:
+      - minio-init-user
+      - minio-init-policy
+    entrypoint: [""]
+    command: |
+      mc admin policy attach local website-ro --user $MINIO_ACCESS_KEY
+    volumes:
+      - ./mc_data:/root/.mc
+
+  minio-init-upload:
+    image: minio/mc
+    depends_on:
+      - minio-init-bucket
+    command: |
+      put /tmp/index.html local/website
+    volumes:
+      - ./mc_data:/root/.mc
+      - ./index.html:/tmp/index.html
