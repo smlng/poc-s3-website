@@ -14,8 +14,8 @@ to change the credentials for Minio set in `.env`.
 docker compose up -d
 ```
 
-Open a browser and verify that [Minio](http://localhost:9090) (credentials are
-set in the file `.env`) and [Nginx](http://localhost:8090) are ready. 
+Open a browser and verify that [Minio](http://localhost:9010) (credentials are
+set in the file `.env`) and [Nginx](http://localhost:8081) are ready. 
 The latter should show the sample website given by the `index.html`.
 
 ## Lessons Learned
@@ -28,6 +28,5 @@ allow to pass environment variables by default, hence the `default.main`.
 
 ### LUA Script
 
-The `s3-proxy.lua` script was conceived with help from A.I. However, that is 
-why it also contains lots of debug output - because it required a lot of 
-refinement to get it working. 
+The `s3-proxy.lua` script was conceived with help from A.I., but needed some
+more work. Hence, there might be room for further improvements.
