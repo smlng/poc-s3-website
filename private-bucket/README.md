@@ -12,11 +12,6 @@ Just run the following and everything should be up and running. You may want
 to change the credentials for Minio set in `.env`.
 
 ```shell
-# create nginx cache folder
-mkdir nginx_cache
-# give it to nonroot (id: 65532)
-chown 65532:65532 nginx_cache
-# start everything else
 docker compose up -d
 ```
 

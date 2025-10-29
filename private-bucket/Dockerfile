@@ -9,6 +9,8 @@ RUN luarocks install lua-resty-aws-signature && \
 
 # overwrite cache paths in base config
 RUN sed -i 's|/var/run/openresty/|/var/cache/nginx/|g' /usr/local/openresty/nginx/conf/nginx.conf
+RUN mkdir -p /var/cache/nginx && \
+    chown 65532:65532 /var/cache/nginx
 
 # prepare binary and dependencies
 RUN mkdir -p /opt/openresty-lua/share && \
@@ -32,6 +34,7 @@ COPY --from=builder /lib/x86_64-linux-gnu/libcrypt.so.1 /lib/x86_64-linux-gnu/
 # binary, dependencies and config
 COPY --from=builder /opt/openresty-lua /usr/local
 COPY --from=builder /etc/nginx /etc/nginx
+COPY --from=builder --chown=nonroot:nonroot /var/cache/nginx /var/cache/nginx
 
 # runtime config
 WORKDIR /

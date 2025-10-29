@@ -26,7 +26,6 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ./nginx_cache:/var/cache/nginx
       - ./docker-dns.conf:/etc/nginx/conf.d/docker-dns.conf
 
   minio-init-mc:
