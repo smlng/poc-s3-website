@@ -6,12 +6,12 @@ local http     = require("resty.http")
 local function getenv(name) return os.getenv(name) or ngx.var[name] or "" end
 
 -- set configuration
-local access_key = getenv("MINIO_ACCESS_KEY")
-local secret_key = getenv("MINIO_SECRET_KEY")
-local region     = getenv("MINIO_REGION") ~= "" and getenv("MINIO_REGION") or "us-east-1"
+local access_key = getenv("S3_ACCESS_KEY")
+local secret_key = getenv("S3_SECRET_KEY")
+local region     = getenv("S3_REGION") ~= "" and getenv("S3_REGION") or "us-east-1"
 local service    = "s3"
-local bucket     = getenv("MINIO_BUCKET")
-local endpoint   = getenv("MINIO_ENDPOINT")
+local bucket     = getenv("S3_BUCKET")
+local endpoint   = getenv("S3_ENDPOINT")
 
 -- fetch content from private bucket in S3
 local function fetch_from_minio(object_path)
