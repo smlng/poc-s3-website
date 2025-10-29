@@ -1,4 +1,5 @@
 -- dependencies
+-- luacheck: globals ngx
 local aws_sign = require("resty.aws_signature")
 local http     = require("resty.http")
 
