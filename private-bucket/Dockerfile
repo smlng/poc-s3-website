@@ -21,7 +21,7 @@ RUN mkdir -p /etc/nginx/lua && \
 
 COPY ./s3-proxy.lua /etc/nginx/lua
 COPY ./default.conf /etc/nginx/conf.d
-COPY ./default.main /etc/nginx/conf.d
+COPY ./envvars.main /etc/nginx/conf.d
 
 # Stage 2: create distroless image
 FROM gcr.io/distroless/cc-debian12
