@@ -7,8 +7,8 @@ RUN apt update  && \
 RUN luarocks install lua-resty-aws-signature && \
     luarocks install lua-resty-http
 
-# overwrite default paths in base config
-RUN sed -i 's|/var/run/openresty/|/tmp/|g' /usr/local/openresty/nginx/conf/nginx.conf
+# overwrite cache paths in base config
+RUN sed -i 's|/var/run/openresty/|/var/cache/nginx/|g' /usr/local/openresty/nginx/conf/nginx.conf
 
 # prepare binary and dependencies
 RUN mkdir -p /opt/openresty-lua/share && \
@@ -24,10 +24,11 @@ COPY ./default.conf /etc/nginx/conf.d
 COPY ./envvars.main /etc/nginx/conf.d
 
 # Stage 2: create distroless image
-FROM gcr.io/distroless/cc-debian12
+FROM gcr.io/distroless/cc-debian12:nonroot
 
 # additional libs
 COPY --from=builder /lib/x86_64-linux-gnu/libcrypt.so.1 /lib/x86_64-linux-gnu/
+
 # binary, dependencies and config
 COPY --from=builder /opt/openresty-lua /usr/local
 COPY --from=builder /etc/nginx /etc/nginx
@@ -36,7 +37,7 @@ COPY --from=builder /etc/nginx /etc/nginx
 WORKDIR /
 EXPOSE 80
 
-USER nonroot:nonroot
+USER nonroot
 
 ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin"
 

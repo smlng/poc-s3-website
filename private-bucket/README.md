@@ -10,7 +10,13 @@ to authenticate against the MINIO S3 storage.
 
 Just run the following and everything should be up and running. You may want
 to change the credentials for Minio set in `.env`.
+
 ```shell
+# create nginx cache folder
+mkdir nginx_cache
+# give it to nonroot (id: 65532)
+chown 65532:65532 nginx_cache
+# start everything else
 docker compose up -d
 ```
 
@@ -25,6 +31,13 @@ The latter should show the sample website given by the `index.html`.
 Some configuration variables, mostly credentials, are passed via environment
 variables to OpenResty/Nginx and subsequently to LUA. However, Nginx does not
 allow to pass environment variables by default, hence the `default.main`.
+
+### Distroless and nonroot
+
+Using a distroless image and an unpriviledged user, i.e. nonroot, comes with
+some challenges especially when dealing with permissions. However, the tag
+`:debug` for any distroless image comes in very handy to help resolve any such
+issues.
 
 ### LUA Script
 
